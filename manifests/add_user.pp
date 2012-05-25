@@ -1,11 +1,15 @@
 
-define users::user (
-  $name     = $title,
-  $groups   = [ ],
-  $home     = '/home/${title}',
-  $comment  = "User ${title}",
-  $key      = '',
-  $key_type = 'rsa'
+define users::add_user(
+
+  $group      = $name,
+  $alt_groups = [ ],
+  $email      = '',
+  $home       = "/home/${name}",
+  $comment    = "User ${name}",
+  $ssh_key    = '',
+  $key_type   = 'rsa',
+  $shell      = '/bin/bash',
+  $system     = false
 ) {
 
   $ssh_path = "$home/.ssh"
@@ -21,14 +25,20 @@ define users::user (
     mode    => '755',
   }
 
-  group { $groups: }
+  group { $group:
+    ensure     => 'present',
+    notify     => User[$name],
+  }
 
   user { $name:
-    groups     => $groups,
+    gid        => $group,
+    groups     => $alt_groups,
     comment    => $comment,
     ensure     => 'present',
     home       => $home,
     managehome => true,
+    shell      => $shell,
+    system     => $system,
   }
 
   #-----------------------------------------------------------------------------
@@ -42,10 +52,10 @@ define users::user (
     mode    => '700',
   }
 
-  if $key {
+  if $ssh_key {
     ssh_authorized_key { "${name}-${key_type}-key":
       ensure  => 'present',
-      key     => $key,
+      key     => "${ssh_key}${email}",
       type    => $key_type,
       user    => $name,
       require => File[$ssh_path],

@@ -10,110 +10,45 @@
 #
 # Parameters:
 #
-#   $user_names  = [ ]
-#   $user_groups = [ ]
-#   $key         = ''
-#   $email       = ''
-#   $editor      = 'vim'
-#   $umask       = 002
-#   $init        = false
+#   $editor    = $users::params::editor,
+#   $umask     = $users::params::umask,
+#   $root_home = $users::params::root_home,
+#   $skel_home = $users::params::skel_home
 #
 # Actions:
 #
-#   Configures user environments and manages users
+#   Configures user environments and manages users.
+#
+#   Provides the users::add_user() function.
 #
 # Requires:
 #
 # Sample Usage:
 #
 #   class { 'users':
-#     user_names  => [ 'admin' ],
-#     user_groups => [ 'admin' ],
-#     key         => '<SOME PUBLIC SSH KEY>',
-#     email       => 'admin@example.com',
-#     editor      => 'vim',
-#     umask       => 002,
-#     init        => true,
+#     editor => 'vim',
+#     umask  => 002,
 #  }
 #
 # [Remember: No empty lines between comments and class definition]
 class users (
-  $user_names  = [ ],
-  $user_groups = [ ],
-  $key         = '',
-  $email       = '',
-  $editor      = 'vim',
-  $umask       = 002,
-  $init        = false,
-) {
 
-  include users::params
+  $editor    = $users::params::editor,
+  $umask     = $users::params::umask,
+  $root_home = $users::params::root_home,
+  $skel_home = $users::params::skel_home
+)
+inherits users::params {
 
   #-----------------------------------------------------------------------------
+  # User profile information
 
-  if $init and $users::params::vim_version {
-    package {
-      'vim':
-        ensure => $users::params::vim_version;
-    }
-  }
+  stage { 'users-bootstrap': }
+  Stage['users-bootstrap'] -> Stage['main']
 
-  #-----------------------------------------------------------------------------
-  # Root user profile information
-
-  if $init and $users::params::root_home {
-    file {
-      "${users::params::root_home}/.profile":
-        owner   => 'root',
-        group   => 'root',
-        mode    => 640,
-        content => template('users/root/.profile.erb');
-
-      "${users::params::root_home}/.bashrc":
-        owner   => 'root',
-        group   => 'root',
-        mode    => 640,
-        content => template('users/root/.bashrc.erb');
-
-      "${users::params::root_home}/.bash_aliases":
-        owner  => 'root',
-        group  => 'root',
-        mode   => 640,
-        source => 'puppet:///modules/users/.bash_aliases';
-    }
-  }
-
-  #-----------------------------------------------------------------------------
-  # Normal user profile information
-
-  if $init and $users::params::skel_home {
-    file {
-      "${users::params::skel_home}/.profile":
-        owner   => "root",
-        group   => "root",
-        mode    => 640,
-        content => template('users/skel/.profile.erb');
-
-      "${users::params::skel_home}/.bashrc":
-        owner    => 'root',
-        group    => 'root',
-        mode     => 640,
-        content  => template('users/skel/.bashrc.erb');
-
-      "${users::params::skel_home}/.bash_aliases":
-        owner  => 'root',
-        group  => 'root',
-        mode   => 640,
-        source => 'puppet:///modules/users/.bash_aliases';
-    }
-  }
-
-  #-----------------------------------------------------------------------------
-
-  if $user_names and $key {
-    users::user { $user_names:
-      groups  => $user_groups,
-      key     => "${key} ${email}",
-    }
+  class { 'users::files':
+    editor => $editor,
+    umask  => $umask,
+    stage => 'users-bootstrap',
   }
 }
