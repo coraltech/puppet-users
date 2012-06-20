@@ -1,5 +1,5 @@
 
-define users::add_user(
+define users::user(
 
   $group      = $name,
   $alt_groups = [ ],
@@ -9,7 +9,8 @@ define users::add_user(
   $ssh_key    = '',
   $key_type   = 'rsa',
   $shell      = '/bin/bash',
-  $system     = false
+  $system     = false,
+
 ) {
 
   $ssh_path = "$home/.ssh"
