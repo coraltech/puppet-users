@@ -1,32 +1,47 @@
 
 define users::user(
 
-  $group                = $name,
-  $alt_groups           = [ ],
-  $email                = "system@${::hostname}",
-  $home                 = "/home/${name}",
-  $comment              = "User ${name}",
-  $allowed_ssh_key      = '',
-  $allowed_ssh_key_type = 'rsa',
-  $public_ssh_key       = undef,
-  $private_ssh_key      = undef,
-  $ssh_key_type         = 'rsa',
-  $password             = undef,
-  $shell                = '/bin/bash',
-  $system               = false,
+  $ensure               = $users::params::user_ensure,
+  $group                = $users::params::user_group ? {
+    ''                   => $name,
+    default              => $users::params::user_group,
+  },
+  $alt_groups           = $users::params::user_alt_groups,
+  $email                = $users::params::user_email ? {
+    ''                   => "system@${::hostname}",
+    default              => $users::params::user_email,
+  },
+  $home                 = $users::params::user_home ? {
+    ''                   => "/home/${name}",
+    default              => $users::params::user_home,
+  },
+  $comment              = $users::params::user_comment ? {
+    ''                   => "User ${name}",
+    default              => $users::params::user_comment,
+  },
+  $allowed_ssh_key      = $users::params::user_allowed_ssh_key,
+  $allowed_ssh_key_type = $users::params::user_allowed_ssh_key_type,
+  $public_ssh_key       = $users::params::user_public_ssh_key,
+  $private_ssh_key      = $users::params::user_private_ssh_key,
+  $ssh_key_type         = $users::params::user_ssh_key_type,
+  $password             = $users::params::user_password,
+  $shell                = $users::params::user_shell,
+  $system               = $users::params::user_system,
 
 ) {
 
-  $ssh_path = "$home/.ssh"
+  $ssh_dir = "$home/.ssh"
 
   include users
 
   #-----------------------------------------------------------------------------
   # User and home directory
 
-  group { $group:
-    ensure  => 'present',
-    require => Class['users'],
+  if ! defined(Group[$group]) {
+    group { $group:
+      ensure  => $ensure,
+      require => Class['users'],
+    }
   }
 
   user { $name:
@@ -34,7 +49,7 @@ define users::user(
     gid        => $group,
     groups     => $alt_groups,
     comment    => $comment,
-    ensure     => 'present',
+    ensure     => $ensure,
     home       => $home,
     managehome => true,
     shell      => $shell,
@@ -43,41 +58,42 @@ define users::user(
   }
 
   file { $home:
-    ensure  => 'directory',
+    ensure  => directory,
     owner   => $name,
-    group   => $name,
-    mode    => '755',
+    group   => $group,
+    recurse => true,
+    mode    => 755,
     require => User[$name],
   }
 
   #-----------------------------------------------------------------------------
   # SSH keys
 
-  file { $ssh_path:
-    ensure  => 'directory',
+  file { $ssh_dir:
+    ensure  => directory,
     owner   => $name,
-    group   => $name,
+    group   => $group,
     mode    => '700',
     require => File[$home],
   }
 
   if $public_ssh_key {
-    file { "${ssh_path}/id_${ssh_key_type}.pub":
+    file { "${ssh_dir}/id_${ssh_key_type}.pub":
       owner   => $name,
       group   => $name,
       mode    => 644,
       content => $public_ssh_key,
-      require => File[$ssh_path],
+      require => File[$ssh_dir],
     }
   }
 
   if $private_ssh_key {
-    file { "${ssh_path}/id_${ssh_key_type}":
+    file { "${ssh_dir}/id_${ssh_key_type}":
       owner   => $name,
       group   => $name,
       mode    => 600,
       content => $private_ssh_key,
-      require => File[$ssh_path],
+      require => File[$ssh_dir],
     }
   }
 
@@ -86,9 +102,9 @@ define users::user(
       ensure  => 'present',
       key     => $allowed_ssh_key,
       type    => $allowed_ssh_key_type,
-      target  => "${ssh_path}/authorized_keys",
+      target  => "${ssh_dir}/authorized_keys",
       user    => $name,
-      require => File[$ssh_path],
+      require => File[$ssh_dir],
     }
   }
 }
