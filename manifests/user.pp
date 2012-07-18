@@ -53,7 +53,10 @@ define users::user(
     home       => $home,
     managehome => true,
     shell      => $shell,
-    system     => $system,
+    system     => $system ? {
+      'true' => true,
+      default => false,
+    },
     require    => Group[$group],
   }
 
