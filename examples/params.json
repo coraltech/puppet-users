@@ -1,7 +1,7 @@
 {
   "users_editor" : "vim",
   "users_umask" : "002",
-  "user_root_name" : "Root account"
+  "user_root_name" : "Root account",
   "user_root_email" : "",
   "user_root_public_ssh_key" : "",
   "user_root_private_ssh_key" : "",
