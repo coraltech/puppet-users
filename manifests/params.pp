@@ -6,7 +6,7 @@ class users::params {
   #-----------------------------------------------------------------------------
   # General configurations
 
-  if $::hiera_exists {
+  if $::hiera_ready {
     $editor                    = hiera('users_editor', $users::default::editor)
     $umask                     = hiera('users_umask', $users::default::umask)
     $root_name                 = hiera('user_root_name', $users::default::root_name)
