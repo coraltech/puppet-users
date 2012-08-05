@@ -40,6 +40,10 @@ define users::user(
   if ! defined(Group[$group]) {
     group { $group:
       ensure  => $ensure,
+      system  => $system ? {
+        'true'  => true,
+        default => false,
+      },
       require => Class['users'],
     }
   }
@@ -65,7 +69,6 @@ define users::user(
     owner   => $name,
     group   => $group,
     recurse => true,
-    mode    => 755,
     require => User[$name],
   }
 
