@@ -73,7 +73,7 @@ class users::params {
       $os_skel_home             = '/etc/skel'
       $os_skel_profile          = "${os_skel_home}/.profile"
       $os_skel_profile_template = 'users/skel/debian.profile.erb'
-      $os_skel_bashrc           = "${os_skel_home}/.debian.bashrc"
+      $os_skel_bashrc           = "${os_skel_home}/.bashrc"
       $os_skel_bashrc_template  = 'users/skel/debian.bashrc.erb'
       $os_skel_aliases          = "${os_skel_home}/.bash_aliases"
       $os_skel_aliases_template = 'users/skel/debian.bash_aliases.erb'
