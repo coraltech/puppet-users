@@ -12,7 +12,7 @@ define users::user(
     default              => $users::params::user_email,
   },
   $home                 = $users::params::user_home ? {
-    ''                   => "/home/${name}",
+    ''                   => "${users::params::os_user_home}/${name}",
     default              => $users::params::user_home,
   },
   $comment              = $users::params::user_comment ? {

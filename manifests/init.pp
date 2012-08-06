@@ -28,6 +28,10 @@
 # [Remember: No empty lines between comments and class definition]
 class users (
 
+  $user_home             = $users::params::os_user_home,
+  $profile_file          = $users::params::os_profile_file,
+  $bashrc_file           = $users::params::os_bashrc_file,
+  $aliases_file          = $users::params::os_aliases_file,
   $editor                = $users::params::editor,
   $umask                 = $users::params::umask,
   $root_home             = $users::params::os_root_home,

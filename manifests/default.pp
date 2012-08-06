@@ -9,6 +9,9 @@ class users::default {
   $root_ssh_key_type         = 'rsa'
   $skel_name                 = 'User account'
   $skel_email                = ''
+  $conf_owner                = ''
+  $conf_group                = ''
+  $conf_mode                 = '0644'
   $user_ensure               = 'present'
   $user_group                = ''
   $user_alt_groups           = [ ]

@@ -16,6 +16,9 @@ class users::params {
     $root_ssh_key_type         = hiera('user_root_ssh_key_type', $users::default::root_ssh_key_type)
     $skel_name                 = hiera('user_skel_name', $users::default::skel_name)
     $skel_email                = hiera('user_skel_email', $users::default::skel_email)
+    $conf_owner                = hiera('user_conf_owner', $users::default::conf_owner)
+    $conf_group                = hiera('user_conf_group', $users::default::conf_group)
+    $conf_mode                 = hiera('user_conf_mode', $users::default::conf_mode)
     $user_ensure               = hiera('user_ensure', $users::default::user_ensure)
     $user_group                = hiera('user_group', $users::default::user_group)
     $user_alt_groups           = hiera('user_alt_groups', $users::default::user_alt_groups)
@@ -41,6 +44,9 @@ class users::params {
     $root_ssh_key_type         = $users::default::root_ssh_key_type
     $skel_name                 = $users::default::skel_name
     $skel_email                = $users::default::skel_email
+    $conf_owner                = $users::default::conf_owner
+    $conf_group                = $users::default::conf_group
+    $conf_mode                 = $users::default::conf_mode
     $user_ensure               = $users::default::user_ensure
     $user_group                = $users::default::user_group
     $user_alt_groups           = $users::default::user_alt_groups
@@ -62,21 +68,27 @@ class users::params {
 
   case $::operatingsystem {
     debian, ubuntu: {
+      $os_profile_file          = '.profile'
+      $os_bashrc_file           = '.bashrc'
+      $os_aliases_file          = '.bash_aliases'
+
       $os_root_home             = '/root'
-      $os_root_profile          = "${os_root_home}/.profile"
+      $os_root_profile          = "${os_root_home}/${os_profile_file}"
       $os_root_profile_template = 'users/root/debian.profile.erb'
-      $os_root_bashrc           = "${os_root_home}/.bashrc"
+      $os_root_bashrc           = "${os_root_home}/${os_bashrc_file}"
       $os_root_bashrc_template  = 'users/root/debian.bashrc.erb'
-      $os_root_aliases          = "${os_root_home}/.bash_aliases"
+      $os_root_aliases          = "${os_root_home}/${os_aliases_file}"
       $os_root_aliases_template = 'users/root/debian.bash_aliases.erb'
 
       $os_skel_home             = '/etc/skel'
-      $os_skel_profile          = "${os_skel_home}/.profile"
+      $os_skel_profile          = "${os_skel_home}/${os_profile_file}"
       $os_skel_profile_template = 'users/skel/debian.profile.erb'
-      $os_skel_bashrc           = "${os_skel_home}/.bashrc"
+      $os_skel_bashrc           = "${os_skel_home}/${os_bashrc_file}"
       $os_skel_bashrc_template  = 'users/skel/debian.bashrc.erb'
-      $os_skel_aliases          = "${os_skel_home}/.bash_aliases"
+      $os_skel_aliases          = "${os_skel_home}/${os_aliases_file}"
       $os_skel_aliases_template = 'users/skel/debian.bash_aliases.erb'
+
+      $os_user_home             = '/home'
     }
     default: {
       fail("The users module is not currently supported on ${::operatingsystem}")
