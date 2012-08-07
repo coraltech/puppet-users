@@ -21,7 +21,7 @@ class users::params {
     $conf_mode                 = hiera('user_conf_mode', $users::default::conf_mode)
     $user_ensure               = hiera('user_ensure', $users::default::user_ensure)
     $user_group                = hiera('user_group', $users::default::user_group)
-    $user_alt_groups           = hiera('user_alt_groups', $users::default::user_alt_groups)
+    $user_alt_groups           = hiera_array('user_alt_groups', $users::default::user_alt_groups)
     $user_email                = hiera('user_email', $users::default::user_email)
     $user_home                 = hiera('user_home', $users::default::user_home)
     $user_comment              = hiera('user_comment', $users::default::user_comment)
