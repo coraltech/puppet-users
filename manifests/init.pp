@@ -28,29 +28,29 @@
 # [Remember: No empty lines between comments and class definition]
 class users (
 
-  $user_home             = $users::params::os_user_home,
-  $profile_file          = $users::params::os_profile_file,
-  $bashrc_file           = $users::params::os_bashrc_file,
-  $aliases_file          = $users::params::os_aliases_file,
+  $home                  = $users::params::home,
+  $profile_file          = $users::params::profile_file,
+  $bashrc_file           = $users::params::bashrc_file,
+  $aliases_file          = $users::params::aliases_file,
   $editor                = $users::params::editor,
   $umask                 = $users::params::umask,
-  $root_home             = $users::params::os_root_home,
-  $root_profile          = $users::params::os_root_profile,
-  $root_bashrc           = $users::params::os_root_bashrc,
-  $root_aliases          = $users::params::os_root_aliases,
+  $root_home             = $users::params::root_home,
+  $root_profile          = $users::params::root_profile,
+  $root_bashrc           = $users::params::root_bashrc,
+  $root_aliases          = $users::params::root_aliases,
   $root_public_ssh_key   = $users::params::root_public_ssh_key,
   $root_private_ssh_key  = $users::params::root_private_ssh_key,
   $root_ssh_key_type     = $users::params::root_ssh_key_type,
-  $root_profile_template = $users::params::os_root_profile_template,
-  $root_bashrc_template  = $users::params::os_root_bashrc_template,
-  $root_aliases_template = $users::params::os_root_aliases_template,
-  $skel_home             = $users::params::os_skel_home,
-  $skel_profile          = $users::params::os_skel_profile,
-  $skel_bashrc           = $users::params::os_skel_bashrc,
-  $skel_aliases          = $users::params::os_skel_aliases,
-  $skel_profile_template = $users::params::os_skel_profile_template,
-  $skel_bashrc_template  = $users::params::os_skel_bashrc_template,
-  $skel_aliases_template = $users::params::os_skel_aliases_template,
+  $root_profile_template = $users::params::root_profile_template,
+  $root_bashrc_template  = $users::params::root_bashrc_template,
+  $root_aliases_template = $users::params::root_aliases_template,
+  $skel_home             = $users::params::skel_home,
+  $skel_profile          = $users::params::skel_profile,
+  $skel_bashrc           = $users::params::skel_bashrc,
+  $skel_aliases          = $users::params::skel_aliases,
+  $skel_profile_template = $users::params::skel_profile_template,
+  $skel_bashrc_template  = $users::params::skel_bashrc_template,
+  $skel_aliases_template = $users::params::skel_aliases_template,
 
 ) inherits users::params {
 
@@ -85,7 +85,7 @@ class users (
     ensure  => directory,
     owner   => 'root',
     group   => 'root',
-    mode    => '700',
+    mode    => '0700',
   }
 
   if $root_public_ssh_key {
@@ -93,7 +93,7 @@ class users (
       path    => "${root_ssh_dir}/id_${root_ssh_key_type}.pub",
       owner   => 'root',
       group   => 'root',
-      mode    => 644,
+      mode    => '0644',
       content => $root_public_ssh_key,
       require => File['root-ssh-dir'],
     }
@@ -104,7 +104,7 @@ class users (
       path    => "${root_ssh_dir}/id_${root_ssh_key_type}",
       owner   => 'root',
       group   => 'root',
-      mode    => 600,
+      mode    => '0600',
       content => $root_private_ssh_key,
       require => File['root-ssh-dir'],
     }

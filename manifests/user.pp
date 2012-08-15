@@ -11,10 +11,7 @@ define users::user(
     ''                   => "system@${::hostname}",
     default              => $users::params::user_email,
   },
-  $home                 = $users::params::user_home ? {
-    ''                   => "${users::params::os_user_home}/${name}",
-    default              => $users::params::user_home,
-  },
+  $home                 = "${users::params::home}/${name}",
   $comment              = $users::params::user_comment ? {
     ''                   => "User ${name}",
     default              => $users::params::user_comment,

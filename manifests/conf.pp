@@ -11,15 +11,15 @@ define users::conf (
     default              => $users::params::conf_group,
   },
   $mode             = $users::params::conf_mode,
-  $home             = $users::params::os_user_home,
-  $profile_file     = $users::params::os_profile_file,
-  $bashrc_file      = $users::params::os_bashrc_file,
-  $aliases_file     = $users::params::os_aliases_file,
+  $home             = $users::params::home,
+  $profile_file     = $users::params::profile_file,
+  $bashrc_file      = $users::params::bashrc_file,
+  $aliases_file     = $users::params::aliases_file,
   $editor           = $users::params::editor,
   $umask            = $users::params::umask,
-  $profile_template = $users::params::os_skel_profile_template,
-  $bashrc_template  = $users::params::os_skel_bashrc_template,
-  $aliases_template = $users::params::os_skel_aliases_template,
+  $profile_template = $users::params::skel_profile_template,
+  $bashrc_template  = $users::params::skel_bashrc_template,
+  $aliases_template = $users::params::skel_aliases_template,
 
 ) {
 

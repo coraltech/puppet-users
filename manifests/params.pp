@@ -1,97 +1,56 @@
 
-class users::params {
+class users::params inherits users::default {
 
-  include users::default
+  $home                      = module_param('home')
+  $editor                    = module_param('editor')
+  $umask                     = module_param('umask')
 
-  #-----------------------------------------------------------------------------
-  # General configurations
+  #---
 
-  if $::hiera_ready {
-    $editor                    = hiera('users_editor', $users::default::editor)
-    $umask                     = hiera('users_umask', $users::default::umask)
-    $root_name                 = hiera('user_root_name', $users::default::root_name)
-    $root_email                = hiera('user_root_email', $users::default::root_email)
-    $root_public_ssh_key       = hiera('user_root_public_ssh_key', $users::default::root_public_ssh_key)
-    $root_private_ssh_key      = hiera('user_root_private_ssh_key', $users::default::root_private_ssh_key)
-    $root_ssh_key_type         = hiera('user_root_ssh_key_type', $users::default::root_ssh_key_type)
-    $skel_name                 = hiera('user_skel_name', $users::default::skel_name)
-    $skel_email                = hiera('user_skel_email', $users::default::skel_email)
-    $conf_owner                = hiera('user_conf_owner', $users::default::conf_owner)
-    $conf_group                = hiera('user_conf_group', $users::default::conf_group)
-    $conf_mode                 = hiera('user_conf_mode', $users::default::conf_mode)
-    $user_ensure               = hiera('user_ensure', $users::default::user_ensure)
-    $user_group                = hiera('user_group', $users::default::user_group)
-    $user_alt_groups           = unique(hiera_array('user_alt_groups', $users::default::user_alt_groups))
-    $user_email                = hiera('user_email', $users::default::user_email)
-    $user_home                 = hiera('user_home', $users::default::user_home)
-    $user_comment              = hiera('user_comment', $users::default::user_comment)
-    $user_allowed_ssh_key      = hiera('user_allowed_ssh_key', $users::default::user_allowed_ssh_key)
-    $user_allowed_ssh_key_type = hiera('user_allowed_ssh_key_type', $users::default::user_allowed_ssh_key_type)
-    $user_public_ssh_key       = hiera('user_public_ssh_key', $users::default::user_public_ssh_key)
-    $user_private_ssh_key      = hiera('user_private_ssh_key', $users::default::user_private_ssh_key)
-    $user_ssh_key_type         = hiera('user_ssh_key_type', $users::default::user_ssh_key_type)
-    $user_password             = hiera('user_password', $users::default::user_password)
-    $user_shell                = hiera('user_shell', $users::default::user_shell)
-    $user_system               = hiera('user_system', $users::default::user_system)
-  }
-  else {
-    $editor                    = $users::default::editor
-    $umask                     = $users::default::umask
-    $root_name                 = $users::default::root_name
-    $root_email                = $users::default::root_email
-    $root_public_ssh_key       = $users::default::root_public_ssh_key
-    $root_private_ssh_key      = $users::default::root_private_ssh_key
-    $root_ssh_key_type         = $users::default::root_ssh_key_type
-    $skel_name                 = $users::default::skel_name
-    $skel_email                = $users::default::skel_email
-    $conf_owner                = $users::default::conf_owner
-    $conf_group                = $users::default::conf_group
-    $conf_mode                 = $users::default::conf_mode
-    $user_ensure               = $users::default::user_ensure
-    $user_group                = $users::default::user_group
-    $user_alt_groups           = $users::default::user_alt_groups
-    $user_email                = $users::default::user_email
-    $user_home                 = $users::default::user_home
-    $user_comment              = $users::default::user_comment
-    $user_allowed_ssh_key      = $users::default::user_allowed_ssh_key
-    $user_allowed_ssh_key_type = $users::default::user_allowed_ssh_key_type
-    $user_public_ssh_key       = $users::default::user_public_ssh_key
-    $user_private_ssh_key      = $users::default::user_private_ssh_key
-    $user_ssh_key_type         = $users::default::user_ssh_key_type
-    $user_password             = $users::default::user_password
-    $user_shell                = $users::default::user_shell
-    $user_system               = $users::default::user_system
-  }
+  $profile_file              = module_param('profile_file')
+  $bashrc_file               = module_param('bashrc_file')
+  $aliases_file              = module_param('aliases_file')
 
-  #-----------------------------------------------------------------------------
-  # Operating system specific configurations
+  $root_home                 = module_param('root_home')
+  $root_profile              = module_param('root_profile')
+  $root_profile_template     = module_param('root_profile_template')
+  $root_bashrc               = module_param('root_bashrc')
+  $root_bashrc_template      = module_param('root_bashrc_template')
+  $root_aliases              = module_param('root_aliases')
+  $root_aliases_template     = module_param('root_aliases_template')
+  $root_name                 = module_param('root_name')
+  $root_email                = module_param('root_email')
+  $root_public_ssh_key       = module_param('root_public_ssh_key')
+  $root_private_ssh_key      = module_param('root_private_ssh_key')
+  $root_ssh_key_type         = module_param('root_ssh_key_type')
 
-  case $::operatingsystem {
-    debian, ubuntu: {
-      $os_profile_file          = '.profile'
-      $os_bashrc_file           = '.bashrc'
-      $os_aliases_file          = '.bash_aliases'
+  $skel_home                 = module_param('skel_home')
+  $skel_profile              = module_param('skel_profile')
+  $skel_profile_template     = module_param('skel_profile_template')
+  $skel_bashrc               = module_param('skel_bashrc')
+  $skel_bashrc_template      = module_param('skel_bashrc_template')
+  $skel_aliases              = module_param('skel_aliases')
+  $skel_aliases_template     = module_param('skel_aliases_template')
+  $skel_name                 = module_param('skel_name')
+  $skel_email                = module_param('skel_email')
 
-      $os_root_home             = '/root'
-      $os_root_profile          = "${os_root_home}/${os_profile_file}"
-      $os_root_profile_template = 'users/root/debian.profile.erb'
-      $os_root_bashrc           = "${os_root_home}/${os_bashrc_file}"
-      $os_root_bashrc_template  = 'users/root/debian.bashrc.erb'
-      $os_root_aliases          = "${os_root_home}/${os_aliases_file}"
-      $os_root_aliases_template = 'users/root/debian.bash_aliases.erb'
+  $conf_owner                = module_param('conf_owner')
+  $conf_group                = module_param('conf_group')
+  $conf_mode                 = module_param('conf_mode')
 
-      $os_skel_home             = '/etc/skel'
-      $os_skel_profile          = "${os_skel_home}/${os_profile_file}"
-      $os_skel_profile_template = 'users/skel/debian.profile.erb'
-      $os_skel_bashrc           = "${os_skel_home}/${os_bashrc_file}"
-      $os_skel_bashrc_template  = 'users/skel/debian.bashrc.erb'
-      $os_skel_aliases          = "${os_skel_home}/${os_aliases_file}"
-      $os_skel_aliases_template = 'users/skel/debian.bash_aliases.erb'
+  #---
 
-      $os_user_home             = '/home'
-    }
-    default: {
-      fail("The users module is not currently supported on ${::operatingsystem}")
-    }
-  }
+  $user_ensure               = module_param('user_ensure')
+  $user_group                = module_param('user_group')
+  $user_alt_groups           = module_array('user_alt_groups')
+  $user_email                = module_param('user_email')
+  $user_comment              = module_param('user_comment')
+  $user_allowed_ssh_key      = module_param('user_allowed_ssh_key')
+  $user_allowed_ssh_key_type = module_param('user_allowed_ssh_key_type')
+  $user_public_ssh_key       = module_param('user_public_ssh_key')
+  $user_private_ssh_key      = module_param('user_private_ssh_key')
+  $user_ssh_key_type         = module_param('user_ssh_key_type')
+  $user_password             = module_param('user_password')
+  $user_shell                = module_param('user_shell')
+  $user_system               = module_param('user_system')
 }
