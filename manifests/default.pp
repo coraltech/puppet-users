@@ -18,6 +18,7 @@ class users::default {
   $conf_mode                 = '0644'
 
   $user_ensure               = 'present'
+  $user_gid                  = ''
   $user_group                = ''
   $user_alt_groups           = [ ]
   $user_email                = ''

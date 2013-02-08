@@ -12,6 +12,7 @@
   "users_conf_group" : "",
   "users_conf_mode" : "0644",
   "users_user_ensure" : "present",
+  "users_user_gid" : "",
   "users_user_group" : "",
   "users_user_alt_groups" : [],
   "users_user_email" : "",

@@ -2,6 +2,7 @@
 define users::user(
 
   $ensure               = $users::params::user_ensure,
+  $gid                  = $users::params::user_gid,
   $group                = $users::params::user_group ? {
     ''                   => $name,
     default              => $users::params::user_group,
@@ -33,6 +34,12 @@ define users::user(
 
   #-----------------------------------------------------------------------------
   # User and home directory
+
+  if $gid {
+    Group {
+      gid => $gid,
+    }
+  }
 
   if ! defined(Group[$group]) {
     group { $group:

@@ -41,6 +41,7 @@ class users::params inherits users::default {
   #---
 
   $user_ensure               = module_param('user_ensure')
+  $user_gid                  = module_param('user_gid')
   $user_group                = module_param('user_group')
   $user_alt_groups           = module_array('user_alt_groups')
   $user_email                = module_param('user_email')
